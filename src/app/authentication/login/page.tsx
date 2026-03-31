@@ -8,9 +8,13 @@ import { FiPhone } from "react-icons/fi";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { useAppDispatch, useAppSelector } from "../../../../redux/store/hook";
 import { sendOtp, verifyOtp } from "../../../../redux/auth/authThunks";
-import OTPInput from "otp-input-react";
 import { setMobileNumber, setMobileOtpSent } from "../../../../redux/auth/authSlice";
 import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
+
+const OTPInput = dynamic(() => import("otp-input-react"), {
+  ssr: false,
+});
 
 type LoginForm = {
   phone_number: string;
