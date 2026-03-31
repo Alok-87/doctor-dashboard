@@ -27,11 +27,7 @@ export default function DoctorVideoCallPage() {
     const { socket } = useSocket();
 
     const localVideoRef = useRef<HTMLVideoElement>(null);
-    const pipVideoRef = useCallback((node: HTMLVideoElement | null) => {
-        if (node && localStreamRef.current) {
-            node.srcObject = localStreamRef.current;
-        }
-    }, []);
+    const pipVideoRef = useRef<HTMLVideoElement>(null);
     const remoteVideoRef = useRef<HTMLVideoElement>(null);
     const pcRef = useRef<RTCPeerConnection | null>(null);
     const localStreamRef = useRef<MediaStream | null>(null);
@@ -50,7 +46,7 @@ export default function DoctorVideoCallPage() {
 
         pc.onicecandidate = ({ candidate }) => {
             if (candidate) {
-                socket.emit('video:signal', {
+                socket?.emit('video:signal', {
                     type: 'candidate',
                     candidate: candidate.candidate,
                     sdpMid: candidate.sdpMid,
@@ -130,8 +126,8 @@ export default function DoctorVideoCallPage() {
             pcRef.current = pc;
             stream.getTracks().forEach(track => pc.addTrack(track, stream));
 
-            socket.emit('video:join', { token });
-            socket.once('video:joined', () => setPhase('waiting'));
+            socket?.emit('video:join', { token });
+            socket?.once('video:joined', () => setPhase('waiting'));
         } catch (err: any) {
             setError(err.message || 'Could not start video call');
             setPhase('idle');
@@ -144,11 +140,11 @@ export default function DoctorVideoCallPage() {
         pcRef.current?.close();
         pcRef.current = null;
         localStreamRef.current?.getTracks().forEach(t => t.stop());
-        socket.emit('video:leave');
-        socket.off('video:signal');
-        socket.off('video:create-offer');
-        socket.off('video:peer-joined');
-        socket.off('video:peer-left');
+        socket?.emit('video:leave');
+        socket?.off('video:signal');
+        socket?.off('video:create-offer');
+        socket?.off('video:peer-joined');
+        socket?.off('video:peer-left');
         setPhase('ended');
         router.back();
     };

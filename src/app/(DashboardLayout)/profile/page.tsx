@@ -122,7 +122,7 @@ export default function DoctorProfileForm() {
 
   // The actual API data lives one level deeper when it comes from the admin endpoint
   // e.g. { data: { id, full_name, … } }
-  const doctorData = user?.data ?? user;
+  const doctorData = user;
 
   const {
     register,
@@ -161,8 +161,8 @@ export default function DoctorProfileForm() {
     reset(mapApiToForm(doctorData));
 
     // Pre-fill avatar from profile_image_url
-    if (doctorData.profile_image_url) {
-      setAvatarPreview(doctorData.profile_image_url);
+    if (doctorData.profileImageUrl) {
+      setAvatarPreview(doctorData.profileImageUrl);
     }
   }, [doctorData, reset]);
 

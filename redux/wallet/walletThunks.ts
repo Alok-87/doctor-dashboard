@@ -31,16 +31,21 @@ export const getLedger = createAsyncThunk(
   },
 );
 
-export const payoutReq = createAsyncThunk(
+export const payoutReq = createAsyncThunk<
+  any,          // ✅ return type
+  any,           // ✅ argument type
+  { rejectValue: string }  // ✅ error type
+>(
   "wallet/payout",
-  async (payload,{ rejectWithValue },
-  ) => {
+  async (payload, { rejectWithValue }) => {
     try {
-      const response = await api.post( '/doctors/payouts',payload);
+      const response = await api.post("/doctors/payouts", payload);
       return response.data.data;
     } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message);
+      return rejectWithValue(
+        error.response?.data?.message || "Payout failed"
+      );
     }
-  },
+  }
 );
 

@@ -33,7 +33,7 @@ export const getProfile = createAsyncThunk<User>( // return type
 
 export const updateProfile = createAsyncThunk<
   User, // return type
-  UpdateProfilePayload // argument type
+  any // argument type
 >("profile/update", async (data, { rejectWithValue }) => {
   try {
     const response = await api.patch("/doctors/profile", data);

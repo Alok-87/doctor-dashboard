@@ -18,15 +18,23 @@ export const getLedger = createAsyncThunk(
 );
 
 
-export const StartCall = createAsyncThunk(
+export const StartCall = createAsyncThunk<
+  any, // ✅ return type
+  string,            // ✅ argument type (APPOINTMENT_ID)
+  { rejectValue: string } // ✅ error type
+>(
   "videoCall/start",
-  async (APPOINTMENT_ID,{ rejectWithValue },
-  ) => {
+  async (APPOINTMENT_ID, { rejectWithValue }) => {
     try {
-      const response = await api.post( `/doctors/appointments/${APPOINTMENT_ID}/video/start`);
+      const response = await api.post(
+        `/doctors/appointments/${APPOINTMENT_ID}/video/start`
+      );
+
       return response.data.data;
     } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message);
+      return rejectWithValue(
+        error.response?.data?.message || "Something went wrong"
+      );
     }
-  },
+  }
 );

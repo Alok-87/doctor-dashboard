@@ -1,21 +1,57 @@
-import React, { useContext, useMemo } from 'react';
-import { io } from 'socket.io-client';
+"use client";
 
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+} from "react";
+import { io, Socket } from "socket.io-client";
 
-const SocketContext = React.createContext(null);
+// ✅ Define type
+type SocketContextType = {
+  socket: Socket | null;
+};
 
-export const SocketProvider = (props) => {
+// ✅ Create context (NO null type issue)
+const SocketContext = createContext<SocketContextType>({
+  socket: null,
+});
 
-    // const baseURL = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v4`
-    const socket = useMemo(() => io(process.env.NEXT_PUBLIC_API_BASE_URL), []);
+// ✅ Provider
+export const SocketProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
+  const socket = useMemo(() => {
+    const URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-    return (
-        <SocketContext.Provider value={{ socket }}>
-            {props.children}
-        </SocketContext.Provider>
-    )
-}
+    if (!URL) {
+      console.error("❌ Socket URL missing");
+      return null;
+    }
 
+    return io(URL, {
+      transports: ["websocket"],
+    });
+  }, []);
+
+  // ✅ Cleanup
+  useEffect(() => {
+    return () => {
+      socket?.disconnect();
+    };
+  }, [socket]);
+
+  return (
+    <SocketContext.Provider value={{ socket }}>
+      {children}
+    </SocketContext.Provider>
+  );
+};
+
+// ✅ Hook (NO null error now)
 export const useSocket = () => {
-    return useContext(SocketContext);
+  return useContext(SocketContext);
 };

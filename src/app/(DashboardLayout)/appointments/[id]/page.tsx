@@ -26,7 +26,6 @@ import {
 import Prescription from './components/Prescription';
 import { FaVideo } from "react-icons/fa6";
 import { StartCall } from '../../../../../redux/videocall/videocallThunks';
-import { useSocket } from '@/context/SocketContext';
 
 
 function formatDate(dateStr?: string) {
@@ -129,7 +128,6 @@ const AppointmentDetailPage = () => {
 
     const [callPayload, setCallPayload] = useState(null);
 
-    const { socket } = useSocket();
 
     // ✅ Just this — no socket needed here
     const startCallHandler = () => {

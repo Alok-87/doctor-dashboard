@@ -5,7 +5,6 @@ import {
   fetchAppointmentDetail,
   fetchAppointments,
   getDashboard,
-  getMyBooking,
   getProfile,
   updateAppointmentStatus,
   updateProfile,
